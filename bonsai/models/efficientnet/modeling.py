@@ -2,9 +2,11 @@ import dataclasses
 import math
 from functools import partial
 from typing import Sequence
+
 import jax
 import jax.numpy as jnp
 from flax import nnx
+
 
 # --- Configuration Classes ---
 @dataclasses.dataclass(frozen=True)
@@ -74,6 +76,7 @@ class ModelCfg:
     def b7(cls, num_classes=1000):
         return cls(2.0, 3.1, 600, 0.5, num_classes)
 
+
 # --- Building Blocks ---
 
 
@@ -140,9 +143,7 @@ class MBConv(nnx.Module):
                 use_bias=False,
                 rngs=rngs,
             )
-            self.bn0 = nnx.BatchNorm(
-                expanded_channels, use_running_average=True, rngs=rngs
-            )
+            self.bn0 = nnx.BatchNorm(expanded_channels, use_running_average=True, rngs=rngs)
 
         # Depthwise convolution
         self.depthwise_conv = nnx.Conv(
@@ -155,9 +156,7 @@ class MBConv(nnx.Module):
             use_bias=False,
             rngs=rngs,
         )
-        self.bn1 = nnx.BatchNorm(
-            expanded_channels, use_running_average=True, rngs=rngs
-        )
+        self.bn1 = nnx.BatchNorm(expanded_channels, use_running_average=True, rngs=rngs)
 
         # Squeeze-and-Excitation layer
         self.se = None
@@ -166,9 +165,7 @@ class MBConv(nnx.Module):
             self.se = SqueezeAndExcitation(expanded_channels, se_channels, rngs=rngs)
 
         # Projection phase (1x1 Conv)
-        self.project_conv = nnx.Conv(
-            expanded_channels, out_channels, kernel_size=(1, 1), use_bias=False, rngs=rngs
-        )
+        self.project_conv = nnx.Conv(expanded_channels, out_channels, kernel_size=(1, 1), use_bias=False, rngs=rngs)
         self.bn2 = nnx.BatchNorm(out_channels, use_running_average=True, rngs=rngs)
 
     def __call__(self, x: jax.Array, training: bool) -> jax.Array:
@@ -224,9 +221,7 @@ class EfficientNet(nnx.Module):
             use_bias=False,
             rngs=rngs,
         )
-        self.stem_bn = nnx.BatchNorm(
-            out_channels, use_running_average=True, rngs=rngs
-        )
+        self.stem_bn = nnx.BatchNorm(out_channels, use_running_average=True, rngs=rngs)
 
         # Build blocks
         self.blocks = []
@@ -252,9 +247,7 @@ class EfficientNet(nnx.Module):
                 )
 
         # Head
-        in_channels = round_filters(
-            block_configs[-1].output_filters, cfg.width_coefficient
-        )
+        in_channels = round_filters(block_configs[-1].output_filters, cfg.width_coefficient)
         out_channels = round_filters(1280, cfg.width_coefficient)
         self.head_conv = nnx.Conv(
             in_channels,
@@ -292,4 +285,3 @@ class EfficientNet(nnx.Module):
         x = self.dropout(x, deterministic=not training)
         x = self.classifier(x)
         return x
-
