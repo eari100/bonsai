@@ -68,8 +68,8 @@ def get_timm_pretrained_weights(model_name: str = "efficientnet_b0"):
     import torch
 
     # TODO(#45): Implement model versions 5-7
-    if int(model_name[-1]) >= 5:
-        raise NotImplementedError("Model implementations for versions 5-7 is still under development.")
+    # if int(model_name[-1]) >= 5:
+    #     raise NotImplementedError("Model implementations for versions 5-7 is still under development.")
 
     # Map to correct timm model names. Some larger models use specific checkpoints.
     timm_name_map = {
