@@ -199,7 +199,7 @@ class EfficientNet(nnx.Module):
         if block_configs is None:
             block_configs = DEFAULT_BLOCK_CONFIGS
 
-        out_channels = round_filters(32, cfg.width_coefficient)
+        out_channels = round_filters(48, cfg.width_coefficient)
         self.stem_conv = nnx.Conv(
             3, out_channels, kernel_size=(3, 3), strides=(2, 2), padding=1, use_bias=False, rngs=rngs
         )
