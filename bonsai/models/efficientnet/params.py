@@ -78,9 +78,9 @@ def get_timm_pretrained_weights(model_name: str = "efficientnet_b0"):
         "efficientnet_b2": "efficientnet_b2",
         "efficientnet_b3": "efficientnet_b3",
         "efficientnet_b4": "efficientnet_b4",
-        "efficientnet_b5": "efficientnet_b5",  # AdvProp
-        "efficientnet_b6": "efficientnet_b6",  # AdvProp
-        "efficientnet_b7": "efficientnet_b7",  # AdvProp
+        "efficientnet_b5": "tf_efficientnet_b5_ap",  # AdvProp
+        "efficientnet_b6": "tf_efficientnet_b6_ap",  # AdvProp
+        "efficientnet_b7": "tf_efficientnet_b7_ap",  # AdvProp
     }
     timm_model_name = timm_name_map.get(model_name)
     if not timm_model_name:
